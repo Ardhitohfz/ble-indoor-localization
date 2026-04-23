@@ -1,0 +1,10 @@
+{
+  "num_leaves": 246,
+  "max_depth": 14,
+  "min_data_in_leaf": 94,
+  "feature_fraction": 0.43601957848295403,
+  "bagging_fraction": 0.8038986358689431,
+  "bagging_freq": 4,
+  "lambda_l1": 0.013157271003021286,
+  "lambda_l2": 5.640529731663893e-07
+}

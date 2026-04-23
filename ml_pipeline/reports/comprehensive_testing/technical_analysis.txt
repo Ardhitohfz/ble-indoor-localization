@@ -1,0 +1,118 @@
+================================================================================
+ANALISIS TEKNIS MENDALAM - UNTUK AHLI/PENELITI
+================================================================================
+
+📊 METRIK PERFORMA DETAIL
+
+Classification Metrics:
+  • Accuracy:           0.996000 (99.60%)
+  • Precision (macro):  0.996364
+  • Precision (weighted): 0.996364
+  • Recall (macro):     0.996000
+  • Recall (weighted):  0.996000
+  • F1-Score (macro):   0.995990
+  • F1-Score (weighted): 0.995990
+  • Cohen's Kappa:      0.995833
+
+Cohen's Kappa Interpretation: Almost perfect agreement
+  → Model performance significantly better than random chance
+
+🎯 TOP-K ACCURACY ANALYSIS
+  Top-1: 0.996000 (99.60%)
+  Top-2: 1.000000 (100.00%) [+0.40pp]
+  Top-3: 1.000000 (100.00%) [+0.00pp]
+  Top-5: 1.000000 (100.00%) [+0.00pp]
+
+Insight:
+  → Near-perfect Top-3 accuracy indicates excellent ranking capability
+
+📈 CONFIDENCE DISTRIBUTION ANALYSIS
+  Mean:     0.567929
+  Median:   0.590505
+  Std Dev:  0.102531
+  Min:      0.190850
+  Max:      0.729460
+  Range:    0.538610
+
+  Low Confidence (<0.5):  56/250 (22.4%)
+  High Confidence (>0.9): 0/250 (0.0%)
+
+📍 SPATIAL ERROR DISTRIBUTION
+  Mean Error:      0.008 m
+  Median Error:    0.000 m
+  Std Deviation:   0.126 m
+  Min Error:       0.000 m
+  Max Error:       2.000 m
+  90th Percentile: 0.000 m
+  95th Percentile: 0.000 m
+
+  → Median = 0 indicates 99.6% of predictions are exact matches
+  → Mean > Median suggests right-skewed distribution (few large errors)
+
+📚 GENERALIZATION ANALYSIS
+  Training Accuracy:  1.000000 (100.00%)
+  Training F1:        1.000000
+  Training Samples:   1000
+  Test Accuracy:      0.996000 (99.60%)
+  Test F1:            0.995990
+  Test Samples:       250
+  Generalization Gap: 0.40 percentage points
+
+  → Perfect training accuracy (100%)
+  → Low gap indicates excellent generalization despite perfect training fit
+  → Model complexity appears appropriate for the problem
+
+🏢 LOCATION-STRATIFIED PERFORMANCE
+
+  CORNER Cells:
+    Samples:  40
+    Accuracy: 1.000000 (100.00%)
+    F1-Score: 1.000000
+
+  EDGE Cells:
+    Samples:  120
+    Accuracy: 0.991667 (99.17%)
+    F1-Score: 0.995614
+
+  CENTER Cells:
+    Samples:  90
+    Accuracy: 1.000000 (100.00%)
+    F1-Score: 1.000000
+
+  Location Accuracy Std Dev: 0.0039
+  → Consistent performance across all location types
+
+🔍 ERROR PATTERN ANALYSIS
+  Total Misclassifications: 1
+  Unique Error Patterns: 1
+
+  Top Error Patterns:
+    1. B5->A5: 1 occurrences (100.0% of errors)
+
+📊 PER-CELL PERFORMANCE STATISTICS
+  Cells Analyzed: 25/25
+  Accuracy Statistics:
+    Mean:   0.996000
+    Median: 1.000000
+    Std:    0.019596
+    Min:    0.900000 (90.0%)
+    Max:    1.000000 (100.0%)
+    Range:  0.100000
+
+  F1-Score Statistics:
+    Mean:   0.995990
+    Std:    0.013617
+
+  ✅ Low variance indicates consistent performance across all cells
+
+📈 STATISTICAL ROBUSTNESS
+  Sample Size (Test): 250
+  Sample Size (Train): 1000
+  Train/Test Ratio: 4.00:1
+
+  95% Confidence Interval for Accuracy:
+    [0.9882, 1.0038]
+    [98.82%, 100.38%]
+
+🎯 TECHNICAL RECOMMENDATIONS
+================================================================================

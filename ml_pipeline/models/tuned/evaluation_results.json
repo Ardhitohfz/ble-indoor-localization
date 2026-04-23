@@ -1,0 +1,22 @@
+{
+  "train_accuracy": 1.0,
+  "train_f1_weighted": 1.0,
+  "train_f1_macro": 1.0,
+  "train_samples": 1000,
+  "test_accuracy": 0.996,
+  "test_f1_weighted": 0.9959899749373433,
+  "test_f1_macro": 0.9959899749373434,
+  "test_samples": 250,
+  "training_time_seconds": 0.39911484718322754,
+  "mean_best_iteration_cv": 21,
+  "num_boost_rounds_used": 21,
+  "n_features": 36,
+  "n_classes": 25,
+  "split_strategy": "80/20 (train/test)",
+  "cv_folds": 5,
+  "timestamp": "2025-12-25T00:03:43.372076",
+  "best_cv_accuracy": 1.0,
+  "best_trial_number": 2,
+  "n_trials_completed": 100,
+  "n_trials_pruned": 0
+}

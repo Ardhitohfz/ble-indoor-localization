@@ -1,0 +1,109 @@
+======================================================================
+BLE FINGERPRINTING - DATA VALIDATION REPORT
+======================================================================
+Generated: 2025-12-24T23:46:17.524097
+Total Files: 1
+Total Samples: 1250
+
+----------------------------------------------------------------------
+VALIDATION RESULTS
+----------------------------------------------------------------------
+
+[PASS] CSV Schema
+       All 6 required columns present
+       columns: ['timestamp', 'ground_truth_x', 'ground_truth_y', 'ground_truth_cell', 'rssi_A', 'rssi_B', 'rssi_C', 'rssi_D', 'rssiA_mean', 'rssiA_median', 'rssiA_std', 'rssiA_min', 'rssiA_max', 'rssiA_q25', 'rssiA_q75', 'rssiA_outliers', 'rssiB_mean', 'rssiB_median', 'rssiB_std', 'rssiB_min', 'rssiB_max', 'rssiB_q25', 'rssiB_q75', 'rssiB_outliers', 'rssiC_mean', 'rssiC_median', 'rssiC_std', 'rssiC_min', 'rssiC_max', 'rssiC_q25', 'rssiC_q75', 'rssiC_outliers', 'rssiD_mean', 'rssiD_median', 'rssiD_std', 'rssiD_min', 'rssiD_max', 'rssiD_q25', 'rssiD_q75', 'rssiD_outliers', 'anchors_valid', 'sample_number', 'collection_time_ms', 'beacon_moving', 'environment', 'notes']
+
+[PASS] Sample Count
+       All cells have >= 50 samples (min: 50, max: 50)
+       counts:
+         A1: 50
+         A2: 50
+         A3: 50
+         A4: 50
+         A5: 50
+         B1: 50
+         B2: 50
+         B3: 50
+         B4: 50
+         B5: 50
+         C1: 50
+         C2: 50
+         C3: 50
+         C4: 50
+         C5: 50
+         D1: 50
+         D2: 50
+         D3: 50
+         D4: 50
+         D5: 50
+         E1: 50
+         E2: 50
+         E3: 50
+         E4: 50
+         E5: 50
+       min_required: 50
+       min_actual: 50
+       max_actual: 50
+       total_cells: 25
+
+[PASS] Missing Data
+       All anchors have < 20% missing data
+       missing_percentage:
+         rssi_A: 0.0%
+         rssi_B: 0.0%
+         rssi_C: 0.0%
+         rssi_D: 0.0%
+       max_allowed: 20%
+       max_actual: 0.0%
+
+[PASS] Ground Truth
+       All ground truth values within valid range
+       valid_cells: ['A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5', 'C1', 'C2', 'C3', 'C4', 'C5', 'D1', 'D2', 'D3', 'D4', 'D5', 'E1', 'E2', 'E3', 'E4', 'E5']
+       found_cells: ['C5', 'D3', 'A5', 'B2', 'E5', 'D5', 'B4', 'A2', 'C4', 'B3', 'C3', 'E2', 'E3', 'C1', 'E4', 'D2', 'E1', 'B1', 'B5', 'A1', 'A3', 'C2', 'D4', 'A4', 'D1']
+       issues: []
+
+[PASS] RSSI Range
+       RSSI values valid (0.00% outliers)
+       outlier_counts:
+         rssi_A: 0
+         rssi_B: 0
+         rssi_C: 0
+         rssi_D: 0
+       total_outliers: 0
+       outlier_percentage: 0.00%
+       valid_range: [-120, -10] dBm
+
+[PASS] Anchor Coverage
+       All anchors have >= 80% detection rate
+       detection_rates:
+         rssi_A: 100.0%
+         rssi_B: 100.0%
+         rssi_C: 100.0%
+         rssi_D: 100.0%
+       min_required: 80%
+       min_actual: 100.0%
+
+[PASS] Duplicates
+       No duplicate samples found
+       duplicate_count: 0
+       duplicate_percentage: 0.00%
+       key_columns: ['timestamp', 'ground_truth_cell']
+
+[PASS] Cell Distribution
+       Distribution balanced within 50% tolerance
+       mean_samples: 50.0
+       min_samples: 50
+       max_samples: 50
+       imbalance: 0.0%
+       max_allowed: 50%
+
+[PASS] Boundary Constraints
+       Boundary constraints check disabled (USE_BOUNDARY_CONSTRAINTS=False)
+
+----------------------------------------------------------------------
+SUMMARY
+----------------------------------------------------------------------
+Passed: 9/9
+Failed: 0/9
+Status: READY FOR TRAINING
+======================================================================

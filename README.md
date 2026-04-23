@@ -1,0 +1,196 @@
+# Sistem Lokalisasi Indoor Berbasis BLE Pada Area Parkir Menggunakan Machine Learning Fingerprinting
+
+> Kode sumber skripsi — Program Studi Teknik Komputer, Universitas Brawijaya
+
+## Gambaran Umum
+
+Sistem ini mengimplementasikan lokalisasi indoor menggunakan teknik **RSSI fingerprinting** berbasis Bluetooth Low Energy (BLE). Beacon bergerak memancarkan sinyal BLE; empat anchor ESP32 di sudut area membaca RSSI secara paralel dan mengirimkan data ke Raspberry Pi 4 (sink). Sink mengekstrak 36 fitur statistik dari RSSI dan mengklasifikasikan posisi ke salah satu dari 25 sel grid menggunakan model LightGBM yang dioptimasi dengan Optuna.
+
+### Arsitektur Sistem
+
+```text
+[Beacon ESP32-S3]
+        │ BLE Advertisement (100 ms interval, 0 dBm)
+        ▼
+┌───────────────────────────────┐
+│  Anchor ESP32 × 4             │  A:(2,2)  B:(8,2)
+│  (antena eksternal 5 dBi)     │  C:(2,8)  D:(8,8)
+└──────────────┬────────────────┘
+               │ Serial / WiFi
+               ▼
+    [Sink: Raspberry Pi 4 Model B]
+    ├─ Akuisisi RSSI (bleak, parallel)
+    ├─ Ekstraksi 36 fitur statistik
+    └─ Inferensi LightGBM → Grid (A1–E5)
+```
+
+Area uji: **10 m × 10 m** (basement parkir), grid **5×5 = 25 sel**, jarak antar sel 2 meter.
+
+---
+
+## Hasil Model
+
+| Metrik | Nilai |
+| --- | --- |
+| Akurasi test set | **99,60%** (249/250 sampel) |
+| 5-fold Stratified CV | **100,00%** (std dev 0,00%) |
+| Generalization gap | 0,40% |
+| Error spasial median | 0,00 m |
+
+Model: LightGBM (multi-class, 25 kelas) — dioptimasi Optuna (100 trials, objective F1-score makro).
+
+---
+
+## Struktur Direktori
+
+```text
+thesis-repo/
+├── ble-localizer-updated/      # Firmware ESP32 (PlatformIO)
+│   ├── platformio.ini
+│   ├── firmware/
+│   │   ├── anchor/             # Firmware anchor: baca RSSI beacon
+│   │   │   ├── include/
+│   │   │   └── src/
+│   │   └── beacon/             # Firmware beacon: BLE advertiser
+│   │       ├── include/
+│   │       └── src/
+│   └── shared/                 # Header dan utilitas bersama anchor-beacon
+│       ├── include/
+│       └── src/
+├── raspi4_sink/                 # Python: akuisisi data BLE di Raspberry Pi 4
+│   ├── rpi_sink_parallel.py    # Entry point: baca RSSI dari 4 anchor paralel
+│   ├── ble_utils.py
+│   ├── config.py
+│   └── data/
+│       └── dataset/            # 25 file CSV hasil pengumpulan data lapangan
+├── ml_pipeline/                 # Pipeline ML: preprocessing → tuning → evaluasi
+│   ├── run_pipeline.py         # Entry point: jalankan semua stage
+│   ├── config_ml.py            # Konfigurasi path dan parameter global
+│   ├── requirements.txt
+│   ├── data/
+│   │   └── raw/                # 25 file CSV input training (A1.csv–E5.csv)
+│   ├── models/
+│   │   └── tuned/              # Model terlatih dan artefak evaluasi
+│   ├── reports/                # Chart dan laporan hasil evaluasi
+│   ├── training/               # Modul training
+│   ├── tuning/                 # Modul Optuna hyperparameter tuning
+│   ├── inference/              # Modul inferensi/prediksi
+│   ├── scripts/                # Script preprocessing dan evaluasi
+│   └── core/                   # Utilitas inti pipeline
+└── .gitignore
+```
+
+---
+
+## Hardware
+
+| Komponen | Spesifikasi |
+| --- | --- |
+| **Beacon** | ESP32-S3 DevKitC-1 — BLE advertiser, non-connectable, interval 100 ms, daya 0 dBm, baterai Li-ion 18650 |
+| **Anchor** | 4× ESP32 + antena eksternal 5 dBi — posisi tetap di sudut area |
+| **Sink** | Raspberry Pi 4 Model B — Python 3.x, Bluetooth 5.0 built-in, inferensi LightGBM |
+
+---
+
+## Software dan Dependensi
+
+### Firmware ESP32 (`ble-localizer-updated/`)
+
+- Framework: Arduino (PlatformIO)
+- Library: NimBLE 2.3.6
+- Bahasa: C++
+
+Build menggunakan PlatformIO:
+
+```bash
+cd ble-localizer-updated
+pio run --environment anchor    # build firmware anchor
+pio run --environment beacon    # build firmware beacon
+pio run --target upload         # upload ke perangkat
+```
+
+### Sink Raspberry Pi 4 (`raspi4_sink/`)
+
+- Python 3.x
+- Dependensi: `bleak`, `pandas`, `numpy`
+
+```bash
+cd raspi4_sink
+pip install bleak pandas numpy
+python rpi_sink_parallel.py
+```
+
+### Pipeline ML (`ml_pipeline/`)
+
+- Python 3.11
+- Dependensi: lihat `ml_pipeline/requirements.txt`
+
+```bash
+cd ml_pipeline
+pip install -r requirements.txt
+python run_pipeline.py
+```
+
+Pipeline berjalan dalam tiga stage berurutan:
+
+```text
+Stage 1 — prepare_dataset.py      → data/processed/
+Stage 2 — tuning/tune_lgbm.py     → models/tuned/
+Stage 3 — comprehensive_testing.py → reports/
+```
+
+---
+
+## Dataset
+
+- **25 file CSV** (`data/raw/A1.csv` — `E5.csv`), satu file per sel grid
+- **1.250 sampel** total — 50 sampel per sel × 25 sel
+- **Split:** 80% training (1.000 sampel) / 20% test (250 sampel), stratified
+- **46 kolom per file:** 4 ground truth + 4 RSSI raw + 32 fitur statistik + 6 metadata
+
+### Fitur Input Model (36 fitur)
+
+| Kelompok | Jumlah | Keterangan |
+| --- | --- | --- |
+| RSSI raw | 4 | RSSI langsung dari anchor A, B, C, D |
+| Statistik per anchor | 32 | Mean, median, std, min, max, Q25, Q75, outlier\_IQR × 4 anchor |
+
+---
+
+## Model Terlatih
+
+File model tersedia di `ml_pipeline/models/tuned/`:
+
+| File | Keterangan |
+| --- | --- |
+| `lgbm_tuned.pkl` | Model LightGBM terlatih (pickle) |
+| `best_params.json` | Hyperparameter terbaik hasil Optuna |
+| `evaluation_results.json` | Metrik evaluasi lengkap |
+| `feature_info.json` | Daftar fitur dan urutan kolom input |
+| `label_encoder.pkl` | Label encoder untuk 25 kelas grid |
+| `lgbm_tuned.txt` | Representasi teks model (human-readable) |
+
+### Contoh Inferensi
+
+```python
+import pickle
+import numpy as np
+
+with open("ml_pipeline/models/tuned/lgbm_tuned.pkl", "rb") as f:
+    model = pickle.load(f)
+with open("ml_pipeline/models/tuned/label_encoder.pkl", "rb") as f:
+    le = pickle.load(f)
+
+# features: array shape (1, 36) — urutan kolom lihat feature_info.json
+prediction = model.predict(features)
+grid_cell = le.inverse_transform(prediction)[0]
+print(grid_cell)  # contoh output: "C3"
+```
+
+---
+
+## Penulis
+
+**Ardhito Hafiz Prathama**
+Program Studi Teknik Komputer, Fakultas Ilmu Komputer
+Universitas Brawijaya — NIM 215150300111005

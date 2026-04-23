@@ -1,0 +1,43 @@
+# ================================================
+# Python
+# ================================================
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# ================================================
+# PlatformIO (ble-localizer-updated)
+# ================================================
+.pio/
+compile_commands.json
+
+# ================================================
+# Generated data — dapat di-regenerate
+# ================================================
+ml_pipeline/data/processed/
+ml_pipeline/logs/
+
+# ================================================
+# Model artifacts — exclude yang tidak perlu
+# ================================================
+# Optuna trial history (bukan model, bisa besar)
+ml_pipeline/models/tuned/optuna_study.pkl
+# Duplikat encoder di root models/
+ml_pipeline/models/label_encoder.pkl
+
+# ================================================
+# IDE & Tools
+# ================================================
+.vscode/
+.claude/
+*.code-workspace
+
+# ================================================
+# OS
+# ================================================
+.DS_Store
+Thumbs.db
+desktop.ini
