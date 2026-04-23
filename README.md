@@ -170,23 +170,6 @@ File model tersedia di `ml_pipeline/models/tuned/`:
 | `label_encoder.pkl` | Label encoder untuk 25 kelas grid |
 | `lgbm_tuned.txt` | Representasi teks model (human-readable) |
 
-### Contoh Inferensi
-
-```python
-import pickle
-import numpy as np
-
-with open("ml_pipeline/models/tuned/lgbm_tuned.pkl", "rb") as f:
-    model = pickle.load(f)
-with open("ml_pipeline/models/tuned/label_encoder.pkl", "rb") as f:
-    le = pickle.load(f)
-
-# features: array shape (1, 36) — urutan kolom lihat feature_info.json
-prediction = model.predict(features)
-grid_cell = le.inverse_transform(prediction)[0]
-print(grid_cell)  # contoh output: "C3"
-```
-
 ---
 
 ## Penulis
