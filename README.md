@@ -1,6 +1,6 @@
 # Sistem Lokalisasi Indoor Berbasis BLE Pada Area Parkir Menggunakan Machine Learning Fingerprinting
 
-> Kode sumber skripsi — Program Studi Teknik Komputer, Universitas Brawijaya
+> Source Code skripsi — Program Studi Teknik Komputer, Universitas Brawijaya
 
 ## Gambaran Umum
 
