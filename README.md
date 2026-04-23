@@ -6,7 +6,6 @@
 ![Python](https://img.shields.io/badge/python-3.11-blue?logo=python&logoColor=white)
 ![Platform](https://img.shields.io/badge/platform-ESP32%20%7C%20Raspberry%20Pi%204-orange?logo=espressif&logoColor=white)
 ![Framework](https://img.shields.io/badge/ML-LightGBM%20%2B%20Optuna-blue?logo=python&logoColor=white)
-![Accuracy](https://img.shields.io/badge/accuracy-99.60%25-brightgreen)
 
 ## Gambaran Umum
 
