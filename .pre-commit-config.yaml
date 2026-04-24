@@ -1,0 +1,27 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+
+  - repo: local
+    hooks:
+      - id: python-compileall
+        name: Python compileall
+        entry: python -m compileall ml_pipeline raspi4_sink
+        language: system
+        pass_filenames: false
+
+      - id: repo-hygiene
+        name: Repo hygiene policy
+        entry: python tools/check_repo_hygiene.py
+        language: system
+        pass_filenames: false
+
+      - id: unit-tests
+        name: Unit tests
+        entry: python -m unittest discover -s tests -p "test_*.py"
+        language: system
+        pass_filenames: false

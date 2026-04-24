@@ -11,6 +11,8 @@ data/
 │   ├── A2.csv
 │   ├── ...
 │   └── E5.csv
+├── archive/                # Archived datasets (not used by default pipeline run)
+│   └── raspi4_sink_legacy/ # Historical files moved from raspi4_sink/data/dataset
 ├── processed/              # Preprocessed data ready for modeling
 │   ├── train.csv          # 80% training set (1,000 samples)
 │   ├── test.csv           # 20% test set (250 samples)
@@ -23,11 +25,12 @@ data/
 
 ### `raw/`
 
-**Immutable source data** - The original, unmodified dataset.
+**Canonical source data** - The primary dataset used by the ML pipeline.
 
 - **Content**: 25 CSV files (5 cells × 5 repetitions: A1-E5)
 - **Format**: RSSI readings from 4 BLE beacons + Cell label
-- **Rule**: ⚠️ **NEVER MODIFY** files in this directory
+- **Rule**: simpan data mentah sebagai sumber utama (hindari duplikasi lintas modul)
+- **Collector default sink**: `raspi4_sink/rpi_sink_parallel.py` menulis CSV baru ke folder ini
 - **Size**: ~1,250 samples (50 samples per cell)
 
 ### `processed/`
@@ -53,6 +56,14 @@ data/
   - Transformation comparisons
 - **Status**: Not currently used (may be added later)
 
+### `archive/`
+
+**Historical datasets** - preserved for traceability, excluded from default pipeline input.
+
+- **Content**: legacy sink files that differ from canonical `raw/`
+- **Use**: manual comparison, audit, or migration
+- **Default pipeline behavior**: reads from `raw/` unless `--data-dir` diubah
+
 ## Workflow
 
 ```
@@ -75,7 +86,7 @@ reports/
 
 **.gitignore settings**:
 
-- ✅ **Tracked**: `raw/` (source data committed to repo)
+- ✅ **Tracked**: `raw/` (single source of truth dataset)
 - ❌ **Ignored**: `processed/` (regenerated on each run)
 - ❌ **Ignored**: `interim/` (temporary transformations)
 
@@ -109,5 +120,5 @@ reports/
 
 ---
 
-**Last Updated**: December 24, 2025  
-**Structure Version**: 2.0 (Migrated from custom to Cookiecutter DS standard)
+**Last Updated**: April 24, 2026  
+**Structure Version**: 2.1 (Single-source dataset policy)

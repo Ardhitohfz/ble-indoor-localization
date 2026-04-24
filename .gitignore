@@ -19,6 +19,7 @@ compile_commands.json
 # ================================================
 ml_pipeline/data/processed/
 ml_pipeline/logs/
+raspi4_sink/data/dataset/
 
 # ================================================
 # Model artifacts — exclude yang tidak perlu
@@ -27,6 +28,10 @@ ml_pipeline/logs/
 ml_pipeline/models/tuned/optuna_study.pkl
 # Duplikat encoder di root models/
 ml_pipeline/models/label_encoder.pkl
+
+# Evaluation artifacts (generated output, bukan source code)
+ml_pipeline/reports/**
+!ml_pipeline/reports/README.md
 
 # ================================================
 # IDE & Tools

@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  python-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ml_pipeline/requirements.txt
+          pip install -r raspi4_sink/requirements.txt
+
+      - name: Syntax check
+        run: python -m compileall ml_pipeline raspi4_sink
+
+      - name: CLI smoke checks
+        run: |
+          python ml_pipeline/run_pipeline.py --help
+          python ml_pipeline/training/prepare_dataset.py --help
+          python raspi4_sink/rpi_sink_parallel.py --help
+
+      - name: Repo hygiene policy
+        run: python tools/check_repo_hygiene.py
+
+      - name: Unit tests
+        run: python -m unittest discover -s tests -p "test_*.py" -v
