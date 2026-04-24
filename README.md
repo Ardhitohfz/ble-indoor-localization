@@ -51,6 +51,7 @@ Model: LightGBM (multi-class, 25 kelas) — dioptimasi Optuna (100 trials, objec
 ```text
 thesis-repo/
 ├── ble-localizer-updated/      # Firmware ESP32 (PlatformIO)
+│   ├── README.md
 │   ├── platformio.ini
 │   ├── firmware/
 │   │   ├── anchor/             # Firmware anchor: baca RSSI beacon
@@ -63,26 +64,30 @@ thesis-repo/
 │       ├── include/
 │       └── src/
 ├── raspi4_sink/                 # Python: akuisisi data BLE di Raspberry Pi 4
+│   ├── README.md
 │   ├── rpi_sink_parallel.py    # Entry point: baca RSSI dari 4 anchor paralel
 │   ├── ble_utils.py
 │   ├── config.py
 │   ├── requirements.txt
-│   └── data/
-│       └── dataset/            # 25 file CSV hasil pengumpulan data lapangan
 ├── ml_pipeline/                 # Pipeline ML: preprocessing → tuning → evaluasi
+│   ├── README.md
 │   ├── run_pipeline.py         # Entry point: jalankan semua stage
 │   ├── config_ml.py            # Konfigurasi path dan parameter global
 │   ├── requirements.txt
 │   ├── data/
-│   │   └── raw/                # 25 file CSV input training (A1.csv–E5.csv)
+│   │   ├── README.md
+│   │   ├── raw/                # Single source of truth dataset
+│   │   └── archive/            # Dataset historis (bukan input default)
 │   ├── models/
 │   │   └── tuned/              # Model terlatih dan artefak evaluasi
-│   ├── reports/                # Chart dan laporan hasil evaluasi
+│   ├── reports/                # Generated report artifacts (re-runnable)
 │   ├── training/               # Modul training
 │   ├── tuning/                 # Modul Optuna hyperparameter tuning
 │   ├── inference/              # Modul inferensi/prediksi
 │   ├── scripts/                # Script preprocessing dan evaluasi
 │   └── core/                   # Utilitas inti pipeline
+├── .github/workflows/ci.yml     # CI smoke check (syntax + entrypoint help)
+├── CONTRIBUTING.md
 └── .gitignore
 ```
 
@@ -110,9 +115,13 @@ Build menggunakan PlatformIO:
 
 ```bash
 cd ble-localizer-updated
-pio run --environment anchor    # build firmware anchor
 pio run --environment beacon    # build firmware beacon
-pio run --target upload         # upload ke perangkat
+pio run --environment anchor_a  # build firmware anchor A
+pio run --environment anchor_b  # build firmware anchor B
+pio run --environment anchor_c  # build firmware anchor C
+pio run --environment anchor_d  # build firmware anchor D
+pio run --environment beacon --target upload
+pio run --environment anchor_a --target upload
 ```
 
 ### Sink Raspberry Pi 4 (`raspi4_sink/`)
@@ -125,6 +134,8 @@ cd raspi4_sink
 pip install -r requirements.txt
 python rpi_sink_parallel.py
 ```
+
+> Default output collector sekarang diarahkan ke `ml_pipeline/data/raw/` agar dataset punya satu sumber utama.
 
 ### Pipeline ML (`ml_pipeline/`)
 
@@ -145,11 +156,22 @@ Stage 2 — tuning/tune_lgbm.py     → models/tuned/
 Stage 3 — comprehensive_testing.py → reports/
 ```
 
+## Quality Gates
+
+- CI GitHub Actions: `.github/workflows/ci.yml`
+- Smoke checks:
+  - `python -m compileall ml_pipeline raspi4_sink`
+  - `python ml_pipeline/run_pipeline.py --help`
+  - `python ml_pipeline/training/prepare_dataset.py --help`
+  - `python raspi4_sink/rpi_sink_parallel.py --help`
+
 ---
 
 ## Dataset
 
-- **25 file CSV** (`data/raw/A1.csv` — `E5.csv`), satu file per sel grid
+- **Single source of truth:** `ml_pipeline/data/raw/`
+- Contoh dataset baseline: **25 file CSV** (`A1.csv` — `E5.csv`), satu file per sel grid
+- Dataset historis lama disimpan terpisah di `ml_pipeline/data/archive/` (tidak dipakai default).
 - **1.250 sampel** total — 50 sampel per sel × 25 sel
 - **Split:** 80% training (1.000 sampel) / 20% test (250 sampel), stratified
 - **46 kolom per file:** 4 ground truth + 4 RSSI raw + 32 fitur statistik + 6 metadata

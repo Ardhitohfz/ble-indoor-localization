@@ -37,6 +37,19 @@ from config import (
     MS_TO_SEC_CONVERSION,
 )
 
+
+def resolve_default_output_dir(script_dir: Path) -> Path:
+    project_root = script_dir.parent
+    canonical_raw_dir = project_root / "ml_pipeline" / "data" / "raw"
+    if (project_root / "ml_pipeline").exists():
+        canonical_raw_dir.mkdir(parents=True, exist_ok=True)
+        return canonical_raw_dir
+
+    fallback_dir = script_dir / "data" / "dataset"
+    fallback_dir.mkdir(parents=True, exist_ok=True)
+    return fallback_dir
+
+
 class ParallelDataCollector:
 
     def __init__(
@@ -70,7 +83,7 @@ class ParallelDataCollector:
         output_path = Path(output_file)
         if not output_path.is_absolute():
             script_dir = Path(__file__).parent
-            dataset_dir = script_dir / "data" / "dataset"
+            dataset_dir = resolve_default_output_dir(script_dir)
             dataset_dir.mkdir(parents=True, exist_ok=True)
             self.output_file = dataset_dir / output_path.name
         else:
@@ -894,7 +907,7 @@ async def main():
         '--output',
         type=str,
         default=None,
-        help='Output CSV filename (default: auto-generated)'
+        help='Output CSV filename (default: auto-generated in ml_pipeline/data/raw/)'
     )
     parser.add_argument(
         '--quiet',
