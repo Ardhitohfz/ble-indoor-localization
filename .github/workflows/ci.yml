@@ -32,3 +32,9 @@ jobs:
           python ml_pipeline/run_pipeline.py --help
           python ml_pipeline/training/prepare_dataset.py --help
           python raspi4_sink/rpi_sink_parallel.py --help
+
+      - name: Repo hygiene policy
+        run: python tools/check_repo_hygiene.py
+
+      - name: Unit tests
+        run: python -m unittest discover -s tests -p "test_*.py" -v

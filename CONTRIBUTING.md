@@ -12,8 +12,14 @@
 ## Workflow Ringkas
 
 1. Install dependency per modul.
-2. Jalankan smoke command yang relevan.
-3. Pastikan perubahan dokumentasi ikut diupdate jika perilaku/path berubah.
+2. Install pre-commit hook:
+   - `pip install pre-commit`
+   - `pre-commit install`
+3. Jalankan quality gates lokal:
+   - `python tools/check_repo_hygiene.py`
+   - `python -m unittest discover -s tests -p "test_*.py" -v`
+   - `pre-commit run --all-files`
+4. Pastikan perubahan dokumentasi ikut diupdate jika perilaku/path berubah.
 
 ## Pull Request
 

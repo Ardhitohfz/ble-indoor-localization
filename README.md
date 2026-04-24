@@ -164,6 +164,12 @@ Stage 3 — comprehensive_testing.py → reports/
   - `python ml_pipeline/run_pipeline.py --help`
   - `python ml_pipeline/training/prepare_dataset.py --help`
   - `python raspi4_sink/rpi_sink_parallel.py --help`
+- Unit tests:
+  - `python -m unittest discover -s tests -p "test_*.py" -v`
+- Hygiene policy:
+  - `python tools/check_repo_hygiene.py`
+- Pre-commit gate:
+  - `pre-commit run --all-files`
 
 ---
 
