@@ -6,7 +6,6 @@
 ![Python](https://img.shields.io/badge/python-3.11-blue?logo=python&logoColor=white)
 ![Platform](https://img.shields.io/badge/platform-ESP32%20%7C%20Raspberry%20Pi%204-orange?logo=espressif&logoColor=white)
 ![Framework](https://img.shields.io/badge/ML-LightGBM%20%2B%20Optuna-blue?logo=python&logoColor=white)
-![Accuracy](https://img.shields.io/badge/accuracy-99.60%25-brightgreen)
 
 ## Gambaran Umum
 
@@ -67,6 +66,7 @@ thesis-repo/
 │   ├── rpi_sink_parallel.py    # Entry point: baca RSSI dari 4 anchor paralel
 │   ├── ble_utils.py
 │   ├── config.py
+│   ├── requirements.txt
 │   └── data/
 │       └── dataset/            # 25 file CSV hasil pengumpulan data lapangan
 ├── ml_pipeline/                 # Pipeline ML: preprocessing → tuning → evaluasi
@@ -118,11 +118,11 @@ pio run --target upload         # upload ke perangkat
 ### Sink Raspberry Pi 4 (`raspi4_sink/`)
 
 - Python 3.x
-- Dependensi: `bleak`, `pandas`, `numpy`
+- Dependensi: lihat `raspi4_sink/requirements.txt` (`bleak`, `pandas`, `numpy`)
 
 ```bash
 cd raspi4_sink
-pip install bleak pandas numpy
+pip install -r requirements.txt
 python rpi_sink_parallel.py
 ```
 
