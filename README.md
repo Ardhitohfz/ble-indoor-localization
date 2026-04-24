@@ -119,7 +119,7 @@ pio run --target upload         # upload ke perangkat
 ### Sink Raspberry Pi 4 (`raspi4_sink/`)
 
 - Python 3.x
-- Dependensi: lihat `raspi4_sink/requirements.txt` (`bleak`, `pandas`, `numpy`)
+- Dependensi: lihat `raspi4_sink/requirements.txt` (`bleak`)
 
 ```bash
 cd raspi4_sink
